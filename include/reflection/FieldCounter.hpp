@@ -11,7 +11,7 @@ namespace valloside::rflct
         static constexpr std::size_t count()
         {
             using T_ = std::remove_cvref_t<T>;
-            constexpr std::size_t count = _count<T_>();
+            constexpr std::size_t count = countImpl<T_>();
             if constexpr (count > 1)
                 return count - countArray<T_, count>();
             else
@@ -36,21 +36,14 @@ namespace valloside::rflct
             constexpr operator T &&() const;
         };
 
-        template <typename T>
-        static constexpr std::size_t countAll()
-        {
-            using T_ = std::remove_cvref_t<T>;
-            return _count<T_>();
-        }
-
         template <typename T, bool Last = false>
-        static constexpr std::size_t _count(auto &&...args)
+        static constexpr std::size_t countImpl(auto &&...args)
         {
             constexpr bool isConstructible = requires { T{args...}; };
             if constexpr (!isConstructible && Last)
                 return sizeof...(args) - 1;
             else if constexpr (sizeof...(args) < 128)
-                return _count<T, isConstructible>(args..., Count{});
+                return countImpl<T, isConstructible>(args..., Count{});
             else
                 static_assert(false, "Too many fields");
         }

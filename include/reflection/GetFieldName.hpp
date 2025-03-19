@@ -1,7 +1,7 @@
 #include <string_view>
 #include <array>
 
-#include "StructCounter.hpp"
+#include "FieldCounter.hpp"
 
 #if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
 #    define __PRETTY_FUNCTION__ __FUNCSIG__
